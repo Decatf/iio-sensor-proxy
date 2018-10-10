@@ -32,7 +32,12 @@ AC_ARG_WITH([udevrulesdir],
 	    [with_udevrulesdir=$($PKG_CONFIG --variable=udevdir udev)"/rules.d"])
 AC_SUBST([udevrulesdir], [$with_udevrulesdir])
 
-PKG_CHECK_EXISTS(systemd, [], [AC_MSG_ERROR(systemd development libraries are required)])
+AC_ARG_ENABLE([systemd],
+	      [AS_HELP_STRING([--disable-systemd],[do not build systemd service])],
+	      [],[enable_systemd=yes])
+if test x$enable_systemd = xyes; then
+	PKG_CHECK_EXISTS(systemd, [], [AC_MSG_ERROR(systemd development libraries are required)])
+fi
 AC_ARG_WITH([systemdsystemunitdir],
 	    AS_HELP_STRING([--with-systemdsystemunitdir=DIR], [Directory for systemd service files]),
 	    [],
